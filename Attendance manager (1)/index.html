@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AttendEase – Your Smart Attendance Companion</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+    }
+    form, .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    input, button, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    button {
+      background-color: #2e86de;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1e5fa0;
+    }
+    .subject {
+      background: #ffffff;
+      border-left: 6px solid #3498db;
+      margin: 10px auto;
+      padding: 15px;
+      max-width: 600px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    .subject:hover {
+      transform: scale(1.01);
+    }
+    .subject.low-attendance {
+      border-left-color: #e74c3c;
+      background: #fff0f0;
+    }
+    .subject p {
+      margin: 6px 0;
+    }
+    .buttons button {
+      margin: 5px 5px 0 0;
+    }
+    .progress {
+      background-color: #eee;
+      border-radius: 5px;
+      overflow: hidden;
+      height: 10px;
+      margin: 6px 0 12px;
+    }
+    .progress-bar {
+      height: 10px;
+      background-color: #2ecc71;
+    }
+  </style>
+</head>
+<body>
+  <h1>AttendEase – Your Smart Attendance Companion</h1>
+
+  <form id="subjectForm">
+    <input type="text" id="subject" placeholder="Subject Name" required />
+    <input type="number" id="attended" placeholder="Attended" required />
+    <input type="number" id="total" placeholder="Total Classes" required />
+    <input type="number" id="threshold" placeholder="Target % (default 85)" />
+    <button type="submit">Add Subject</button>
+  </form>
+
+  <div class="controls">
+    <label for="sortSelect">Sort by:</label>
+    <select id="sortSelect">
+      <option value="none">None</option>
+      <option value="asc">Lowest Attendance %</option>
+      <option value="desc">Highest Attendance %</option>
+    </select>
+  </div>
+
+  <div id="subjectList"></div>
+
+  <script>
+    let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
+    let threshold = 85;
+
+    function calculateSafeBunks(attended, total, threshold) {
+      let bunks = 0;
+      while ((attended / (total + 1)) * 100 >= threshold) {
+        bunks++;
+        total++;
+      }
+      return bunks;
+    }
+
+    function calculateMustAttend(attended, total, threshold) {
+      let required = 0;
+      while (((attended + required) / (total + required)) * 100 < threshold) {
+        required++;
+      }
+      return required;
+    }
+
+    function renderSubjects() {
+      const list = document.getElementById("subjectList");
+      list.innerHTML = "";
+
+      const sortMode = document.getElementById("sortSelect").value;
+      let sortedSubjects = [...subjects];
+
+      if (sortMode === "asc") {
+        sortedSubjects.sort((a, b) => {
+          const aPercent = a.total ? (a.attended / a.total) : 0;
+          const bPercent = b.total ? (b.attended / b.total) : 0;
+          return aPercent - bPercent;
+        });
+      } else if (sortMode === "desc") {
+        sortedSubjects.sort((a, b) => {
+          const aPercent = a.total ? (a.attended / a.total) : 0;
+          const bPercent = b.total ? (b.attended / b.total) : 0;
+          return bPercent - aPercent;
+        });
+      }
+
+      sortedSubjects.forEach((s, i) => {
+        const percent = s.total ? ((s.attended / s.total) * 100).toFixed(2) : 0;
+        const safeBunks = calculateSafeBunks(s.attended, s.total, threshold);
+        const mustAttend = calculateMustAttend(s.attended, s.total, threshold);
+        const isLow = percent < threshold;
+        const barWidth = s.total ? (s.attended / s.total) * 100 : 0;
+
+        list.innerHTML += `
+          <div class="subject ${isLow ? 'low-attendance' : ''}">
+            <h3>${s.name}</h3>
+            <p><strong>Attended:</strong> ${s.attended} / ${s.total}</p>
+            <div class="progress"><div class="progress-bar" style="width:${barWidth}%"></div></div>
+            <p><strong>Attendance %:</strong> ${percent}%</p>
+            <p><strong>Safe Bunks Left:</strong> ${safeBunks}</p>
+            <p><strong>Must Attend:</strong> ${mustAttend} more class(es) to reach ${threshold}%</p>
+            <div class="buttons">
+              <button onclick="markPresent(${i})">+ Present</button>
+              <button onclick="editSubject(${i})">✏️ Edit</button>
+              <button onclick="markBunk(${i})">+ Bunked</button>
+              <button onclick="deleteSubject(${i})" style="background-color: #e74c3c;">Delete</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function saveAndRender() {
+      localStorage.setItem("subjects", JSON.stringify(subjects));
+      renderSubjects();
+    }
+
+    document.getElementById("subjectForm").onsubmit = e => {
+      e.preventDefault();
+      const nameInput = document.getElementById("subject");
+      const name = nameInput.value.trim().replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+      const attended = +document.getElementById("attended").value;
+      const total = +document.getElementById("total").value;
+      const inputThreshold = +document.getElementById("threshold").value;
+      if (!name || isNaN(attended) || isNaN(total)) {
+        alert("Please fill all required fields correctly.");
+        return;
+      }
+      if (!isNaN(inputThreshold) && inputThreshold > 0) threshold = inputThreshold;
+      subjects.push({ name: name, attended, total });
+      saveAndRender();
+      e.target.reset();
+    }
+
+    function markPresent(i) {
+      subjects[i].attended++;
+      subjects[i].total++;
+      saveAndRender();
+    }
+
+    function markBunk(i) {
+      subjects[i].total++;
+      saveAndRender();
+    }
+
+    function deleteSubject(i) {
+      subjects.splice(i, 1);
+      saveAndRender();
+    }
+
+    function editSubject(i) {
+      const s = subjects[i];
+      const name = prompt("Edit Subject Name:", s.name);
+      const attended = prompt("Edit Attended Classes:", s.attended);
+      const total = prompt("Edit Total Classes:", s.total);
+      if (name && !isNaN(attended) && !isNaN(total)) {
+        subjects[i].name = name.trim().replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+        subjects[i].attended = parseInt(attended);
+        subjects[i].total = parseInt(total);
+        saveAndRender();
+      }
+    }
+
+
+    document.getElementById("sortSelect").addEventListener("change", renderSubjects);
+
+    renderSubjects();
+  </script>
+</body>
+</html>

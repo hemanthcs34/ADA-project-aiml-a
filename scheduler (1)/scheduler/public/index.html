@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Scheduler - Complete Task Management</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1><i class="fas fa-brain"></i> Smart Scheduler</h1>
+      <p class="subtitle">Complete Task Management System</p>
+      <button id="notificationBtn" class="notification-btn" onclick="requestNotificationPermission()">
+        <i class="fas fa-bell"></i> Enable Notifications
+      </button>
+    </header>
+
+    <div class="controls">
+      <div class="view-controls">
+        <select id="viewType" onchange="loadTasks()">
+          <option value="daily">📅 Daily</option>
+          <option value="weekly">📊 Weekly</option>
+          <option value="monthly">📈 Monthly</option>
+        </select>
+        
+        <select id="categoryFilter" onchange="loadTasks()">
+          <option value="">All Categories</option>
+          <option value="work">💼 Work</option>
+          <option value="personal">👤 Personal</option>
+          <option value="health">🏥 Health</option>
+          <option value="learning">📚 Learning</option>
+          <option value="other">📌 Other</option>
+        </select>
+      </div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <span id="totalTasks">0</span>
+          <label>Total</label>
+        </div>
+        <div class="stat-item">
+          <span id="completedTasks">0</span>
+          <label>Completed</label>
+        </div>
+        <div class="stat-item">
+          <span id="pendingTasks">0</span>
+          <label>Pending</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="tasks-section">
+        <h2>Tasks <span id="taskCount">(0)</span></h2>
+        <input type="text" id="searchInput" placeholder="Search tasks..." oninput="searchTasks()" style="width:100%;margin-bottom:10px;padding:10px;border-radius:8px;border:1px solid #e1e5e9;" />
+        <div id="tasksContainer" class="tasks-container"></div>
+      </div>
+
+      <div class="add-task-section">
+        <h3><i class="fas fa-plus"></i> Add New Task</h3>
+        <form id="taskForm" class="task-form">
+          <div class="form-group">
+            <input type="text" id="titleInput" placeholder="Task title..." required />
+          </div>
+          
+          <div class="form-group">
+            <textarea id="descriptionInput" placeholder="Task description (optional)"></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startTimeInput">Start Time</label>
+              <input type="datetime-local" id="startTimeInput" required />
+            </div>
+            <div class="form-group">
+              <label for="endTimeInput">End Time</label>
+              <input type="datetime-local" id="endTimeInput" required />
+            </div>
+            <div class="form-group">
+              <select id="priorityInput">
+                <option value="low">🟢 Low</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="high">🔴 High</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <select id="categoryInput">
+                <option value="work">💼 Work</option>
+                <option value="personal">👤 Personal</option>
+                <option value="health">🏥 Health</option>
+                <option value="learning">📚 Learning</option>
+                <option value="other" selected>📌 Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="reminderInput" checked />
+                <span>Enable Reminder</span>
+              </label>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-plus"></i> Add Task
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Task Edit Modal -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Edit Task</h3>
+        <form id="editForm" class="task-form">
+          <input type="hidden" id="editTaskId" />
+          <div class="form-group">
+            <input type="text" id="editTitleInput" placeholder="Task title..." required />
+          </div>
+          
+          <div class="form-group">
+            <textarea id="editDescriptionInput" placeholder="Task description"></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editStartTimeInput">Start Time</label>
+              <input type="datetime-local" id="editStartTimeInput" required />
+            </div>
+            <div class="form-group">
+              <label for="editEndTimeInput">End Time</label>
+              <input type="datetime-local" id="editEndTimeInput" required />
+            </div>
+            <div class="form-group">
+              <select id="editPriorityInput">
+                <option value="low">🟢 Low</option>
+                <option value="medium">🟡 Medium</option>
+                <option value="high">🔴 High</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <select id="editCategoryInput">
+                <option value="work">💼 Work</option>
+                <option value="personal">👤 Personal</option>
+                <option value="health">🏥 Health</option>
+                <option value="learning">📚 Learning</option>
+                <option value="other">📌 Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="editReminderInput" />
+                <span>Enable Reminder</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
