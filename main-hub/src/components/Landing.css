@@ -1,0 +1,135 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  overflow-x: hidden;
+}
+
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 50px 24px;
+  box-sizing: border-box;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at top left, rgba(255, 107, 107, 0.1), transparent 50%),
+    radial-gradient(ellipse at top right, rgba(77, 150, 255, 0.1), transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(84, 227, 70, 0.1), transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(254, 202, 87, 0.1), transparent 50%);
+}
+
+.landing-header {
+  margin-bottom: 60px;
+  animation: fadeInDown 1s ease-out;
+}
+
+.landing-header h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: #1c2a4e;
+  margin-bottom: 15px;
+  letter-spacing: -1px;
+}
+
+.landing-header p {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: #5a6782;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.tool-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 35px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.tool-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  perspective: 1000px;
+}
+
+.tool-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  padding: 35px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  text-align: left;
+  will-change: transform;
+}
+
+.tool-card-link:hover .tool-card {
+  transform: translateY(-12px) rotateX(5deg) scale(1.03);
+  box-shadow: 0 20px 50px 0 rgba(31, 38, 135, 0.2);
+}
+
+.tool-card-icon {
+  font-size: 3.5rem;
+  margin-bottom: 25px;
+  color: var(--icon-color, #3498db);
+  display: inline-block;
+}
+
+.tool-card-content h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #2c3e50;
+}
+
+.tool-card-content p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.tool-card .tool-card-shine {
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: left 0.75s;
+}
+
+.tool-card-link:hover .tool-card .tool-card-shine {
+  left: 150%;
+}
+
+.landing-footer {
+  margin-top: 80px;
+  color: #95a5a6;
+  font-size: 0.9rem;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .tool-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

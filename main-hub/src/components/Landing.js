@@ -1,60 +1,63 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './Landing.css';
 import { FaChartLine, FaCalendarAlt, FaFileAlt, FaUserCheck } from 'react-icons/fa';
 
-const tools = [
-  {
-    path: '/analyzer',
-    icon: <FaChartLine />,
+const toolConfig = {
+  analyzer: {
+    url: 'http://localhost:3001',
     title: 'Algorithm Analyzer',
     description: 'Visualize and analyze the complexity of various algorithms in real-time.',
+    icon: <FaChartLine />,
     color: '#ff6b6b'
   },
-  {
-    path: '/planner',
-    icon: <FaCalendarAlt />,
+  planner: {
+    url: '/planner/index.html',
     title: 'Daily Planner',
     description: 'Organize your tasks, set priorities, and boost your daily productivity.',
+    icon: <FaCalendarAlt />,
     color: '#4d96ff'
   },
-  {
-    path: '/resume',
-    icon: <FaFileAlt />,
+  resume: {
+    url: 'http://localhost:5000',
     title: 'Resume Optimizer',
     description: 'Enhance your resume to pass ATS scans and catch recruiters\' attention.',
+    icon: <FaFileAlt />,
     color: '#54e346'
   },
-  {
-    path: '/attendance',
-    icon: <FaUserCheck />,
+  attendance: {
+    url: '/attendance-tracker.html',
     title: 'Attendance Tracker',
     description: 'A simple and efficient way to monitor and manage attendance records.',
+    icon: <FaUserCheck />,
     color: '#feca57'
   }
-];
+};
+
+const ToolCard = ({ config }) => (
+  <a href={config.url} className="tool-card-link" target="_blank" rel="noopener noreferrer">
+    <div className="tool-card">
+      <div className="tool-card-icon" style={{ '--icon-color': config.color }}>
+        {config.icon}
+      </div>
+      <div className="tool-card-content">
+        <h3>{config.title}</h3>
+        <p>{config.description}</p>
+      </div>
+      <div className="tool-card-shine"></div>
+    </div>
+  </a>
+);
 
 const Landing = () => {
   return (
     <div className="landing-container">
       <div className="landing-header">
-        <h1>Welcome to Your Integrated Tool Suite</h1>
-        <p>Four powerful tools, one seamless experience. Select a tool to get started.</p>
+        <h1>AIML-A SECTION 27 BATCH</h1>
+        <p>Four powerful, independent tools, accessible from one central hub. Select a tool to get started.</p>
       </div>
       <div className="tool-cards-grid">
-        {tools.map((tool, index) => (
-          <Link to={tool.path} key={index} className="tool-card-link">
-            <div className="tool-card">
-              <div className="tool-card-icon" style={{'--icon-color': tool.color}}>
-                {tool.icon}
-              </div>
-              <div className="tool-card-content">
-                <h3>{tool.title}</h3>
-                <p>{tool.description}</p>
-              </div>
-              <div className="tool-card-shine"></div>
-            </div>
-          </Link>
+        {Object.values(toolConfig).map((tool) => (
+          <ToolCard key={tool.title} config={tool} />
         ))}
       </div>
       <footer className="landing-footer">
@@ -65,4 +68,3 @@ const Landing = () => {
 };
 
 export default Landing;
-
