@@ -1,6 +1,6 @@
 import React from 'react';
 import './Landing.css';
-import { FaChartLine, FaCalendarAlt, FaFileAlt, FaUserCheck } from 'react-icons/fa';
+import { FaChartLine, FaCalendarAlt, FaFileAlt, FaUserCheck, FaQuestionCircle } from 'react-icons/fa';
 
 const toolConfig = {
   analyzer: {
@@ -11,7 +11,7 @@ const toolConfig = {
     color: '#ff6b6b'
   },
   planner: {
-    url: '/planner/index.html',
+    url: 'planner/index.html',
     title: 'Daily Planner',
     description: 'Organize your tasks, set priorities, and boost your daily productivity.',
     icon: <FaCalendarAlt />,
@@ -24,8 +24,15 @@ const toolConfig = {
     icon: <FaFileAlt />,
     color: '#54e346'
   },
+  qaPlatform: {
+    url: 'http://localhost:5173',
+    title: 'Student Q&A Platform',
+    description: 'A full-stack Q&A platform with advanced sorting and search algorithms.',
+    icon: <FaQuestionCircle />,
+    color: '#8e44ad'
+  },
   attendance: {
-    url: '/attendance-tracker.html',
+    url: 'attendance-tracker.html',
     title: 'Attendance Tracker',
     description: 'A simple and efficient way to monitor and manage attendance records.',
     icon: <FaUserCheck />,
@@ -53,11 +60,11 @@ const Landing = () => {
     <div className="landing-container">
       <div className="landing-header">
         <h1>AIML-A SECTION 27 BATCH</h1>
-        <p>Four powerful, independent tools, accessible from one central hub. Select a tool to get started.</p>
+        <p>Five powerful, independent tools, accessible from one central hub. Select a tool to get started.</p>
       </div>
       <div className="tool-cards-grid">
-        {Object.values(toolConfig).map((tool) => (
-          <ToolCard key={tool.title} config={tool} />
+        {Object.entries(toolConfig).map(([key, tool]) => (
+          <ToolCard key={key} config={tool} />
         ))}
       </div>
       <footer className="landing-footer">
