@@ -1,10 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
-from backend.algorithms.merge_sort import merge_sort
-from backend.algorithms.quick_sort import quick_sort
 
 app = Flask(__name__)
 CORS(app)
@@ -377,7 +372,6 @@ def api_quick_sort():
     if not isinstance(arr, list):
         return jsonify({'error': 'Input must be a list.'}), 400
     try:
-        from backend.algorithms.quick_sort import quick_sort as qs_impl
         def quick_sort(arr):
             def partition(a, l, r):
                 if pivot_strategy == 'first':
@@ -418,8 +412,18 @@ def api_selection_sort():
     if not isinstance(arr, list):
         return jsonify({'error': 'Input must be a list.'}), 400
     try:
-        from backend.algorithms.selection import selection_sort
-        result = selection_sort(arr[:])
+        # Define the sorting logic locally to remove external dependency
+        def local_selection_sort(a):
+            arr_copy = a[:]
+            n = len(arr_copy)
+            for i in range(n):
+                min_idx = i
+                for j in range(i + 1, n):
+                    if arr_copy[j] < arr_copy[min_idx]:
+                        min_idx = j
+                arr_copy[i], arr_copy[min_idx] = arr_copy[min_idx], arr_copy[i]
+            return arr_copy
+        result = local_selection_sort(arr[:])
         steps = selection_sort_steps(arr[:])
         return jsonify({'result': result, 'steps': steps})
     except Exception as e:
@@ -574,4 +578,4 @@ def api_dijkstra():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True) 
+    app.run(host='0.0.0.0', port=5002, debug=True)

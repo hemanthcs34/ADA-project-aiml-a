@@ -30,13 +30,13 @@ npm start
 This runs the server for the "Algorithm Analyzer" tool.
 ```sh
 # 1. Navigate to the analyzer's frontend directory
-cd "c:\Users\HP\OneDrive\Desktop\ADA project aiml-a\Algorithm Analyzer (1)\ada\frontend"
+cd "c:\Users\HP\OneDrive\Desktop\ADA project aiml-a\algorithmanalyser"
 
 # 2. Install dependencies (only needed once)
 npm install
 
 # 3. Start the server
-npm start
+npm run dev
 ```
 ✅ **The Analyzer tool is now running at `http://localhost:3001`**
 
@@ -47,7 +47,7 @@ npm start
 This runs the Python server for the "Resume Optimizer" tool.
 ```sh
 # 1. Navigate to the optimizer's directory
-cd "c:\Users\HP\OneDrive\Desktop\ADA project aiml-a\resume_optimizer (1)\DocumentParseHub"
+cd "c:\Users\HP\OneDrive\Desktop\ADA project aiml-a\resumeoptimiser"
 
 # 2. Activate virtual environment
 venv\Scripts\activate

@@ -11,7 +11,7 @@ const toolConfig = {
     color: '#ff6b6b'
   },
   planner: {
-    url: 'planner/index.html',
+    url: 'http://localhost:4000',
     title: 'Daily Planner',
     description: 'Organize your tasks, set priorities, and boost your daily productivity.',
     icon: <FaCalendarAlt />,
@@ -41,7 +41,7 @@ const toolConfig = {
 };
 
 const ToolCard = ({ config }) => (
-  <a href={config.url} className="tool-card-link" target="_blank" rel="noopener noreferrer">
+  <a href={config.url} className="tool-card-link" target="_blank" rel="noopener noreferrer" aria-label={`Launch ${config.title}`}>
     <div className="tool-card">
       <div className="tool-card-icon" style={{ '--icon-color': config.color }}>
         {config.icon}
