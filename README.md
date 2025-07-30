@@ -1,24 +1,19 @@
 # AIML-A Project Hub & Tools
 
-This workspace contains a central **Project Hub UI** that launches several independent applications. To make the hub's buttons work, you must run each application's server simultaneously in separate terminals.
+This workspace contains a central **Project Hub UI** that launches several independent, full-stack applications. To make the hub's buttons work, you must run each application's server simultaneously.
 
 ---
 
 ## Quick Start: How to Run Everything
 
-Open a new terminal for each step.
+To run the entire suite, you must start **seven** servers in separate terminals. Follow these steps carefully.
 
-### Terminal 1: Run the Main Project Hub (Your UI)
+### Terminal 1: Main Project Hub (UI) - Port 3000
 
 This is the main user interface.
 ```sh
-# 1. Navigate to the hub's directory
 cd "c:\Users\HP\OneDrive\Desktop\ADA project aiml-a\main-hub"
-
-# 2. Install dependencies (only needed once)
 npm install
-
-# 3. Start the UI
 npm start
 ```
 ✅ **Your UI is now running at `http://localhost:3000`**
