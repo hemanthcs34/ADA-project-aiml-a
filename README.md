@@ -80,3 +80,26 @@ cd "c:\Users\HP\OneDrive\Desktop\ADA project aiml-a\projectQ&A\project"
 npm run dev
 ```
 ✅ **The Q&A frontend is now running at `http://localhost:5173`**
+
+### 📊 CGPA Calculator
+The **CGPA Calculator** module helps students calculate their **Cumulative Grade Point Average** quickly and accurately.
+- **Input:** Subject grades and credits for one or more semesters.
+- **Output:** Overall CGPA calculated using weighted averages.
+- **Features:**
+  - Supports multiple semesters
+  - Handles both percentage and grade-based inputs
+  - Instant calculation with a clean, responsive UI
+- **Purpose:** Part of the all-in-one student productivity suite.
+
+## 🖥️ How to Run
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/<your-username>/<repo-name>.git
+   cd <repo-name>
+2. **Install dependencies**
+   ```bash
+   npm install
+3. **Start the development server:**
+   ```bash
+   npm run dev
